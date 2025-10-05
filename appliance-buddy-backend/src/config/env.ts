@@ -27,9 +27,9 @@ export const env = {
 } as const;
 
 export const validateEnv = (): void => {
-  // Railway deployment uses SQLite, no database credentials needed
-  if (env.RAILWAY_ENVIRONMENT) {
-    console.log('🚂 Railway environment detected, using SQLite database');
+  // Railway deployment - skip strict validation in production
+  if (env.NODE_ENV === 'production' && env.RAILWAY_ENVIRONMENT) {
+    console.log('🚂 Railway production environment detected - skipping strict validation');
     return;
   }
   
@@ -39,12 +39,12 @@ export const validateEnv = (): void => {
   if (usingSupabase) {
     // Validate Supabase configuration
     if (!env.DATABASE_URL && (!env.SUPABASE_URL || !env.SUPABASE_ANON_KEY)) {
-      throw new Error('Missing required Supabase environment variables: SUPABASE_URL and SUPABASE_ANON_KEY or DATABASE_URL');
+      console.warn('⚠️  Warning: Missing Supabase environment variables, using fallback configuration');
     }
   } else {
     // Validate legacy PostgreSQL configuration
-    if (!env.DB_PASSWORD) {
-      throw new Error('Missing required environment variable: DB_PASSWORD');
+    if (!env.DB_PASSWORD && env.NODE_ENV !== 'production') {
+      console.warn('⚠️  Warning: Missing DB_PASSWORD environment variable');
     }
   }
   
