@@ -1,0 +1,26 @@
+[variables]
+NODE_ENV = "production"
+
+[phases.setup]
+nixPkgs = ["nodejs-20_x", "python3", "sqlite"]
+
+[phases.install]
+cmds = [
+  "cd appliance-buddy-backend",
+  "npm ci --omit=dev"
+]
+
+[phases.build]
+cmds = [
+  "cd appliance-buddy-backend", 
+  "npm run build"
+]
+
+[start]
+cmd = "cd appliance-buddy-backend && npm start"
+
+[healthcheck]
+path = "/health"
+interval = "30s"
+timeout = "10s"
+retries = 3

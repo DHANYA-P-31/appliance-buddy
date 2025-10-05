@@ -1,0 +1,17 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "cd appliance-buddy-backend && npm ci && npm run build",
+    "watchPatterns": [
+      "appliance-buddy-backend/**"
+    ]
+  },
+  "deploy": {
+    "startCommand": "cd appliance-buddy-backend && npm start",
+    "healthcheckPath": "/health",
+    "healthcheckTimeout": 100,
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}

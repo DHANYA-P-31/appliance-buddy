@@ -1,0 +1,34 @@
+# Ignore frontend files for backend deployment
+src/
+public/
+index.html
+vite.config.ts
+tailwind.config.ts
+postcss.config.js
+components.json
+
+# Ignore dev dependencies and cache
+node_modules/
+.git/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Ignore test files
+*.test.*
+*.spec.*
+__tests__/
+coverage/
+
+# Ignore build artifacts from frontend
+dist/
+build/
+.next/
+.nuxt/
