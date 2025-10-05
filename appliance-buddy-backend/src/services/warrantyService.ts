@@ -1,5 +1,5 @@
 import { db } from '../config/database';
-import { appliances } from '../db/schema';
+import { appliances } from '../db/schema/index';
 import { WarrantyStatus } from '../types';
 import { calculateWarrantyEndDate, getWarrantyStatus } from '../utils/dateUtils';
 

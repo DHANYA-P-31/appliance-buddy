@@ -1,6 +1,6 @@
 import { eq, lt, desc } from 'drizzle-orm';
 import { db } from '../config/database';
-import { maintenanceTasks } from '../db/schema';
+import { maintenanceTasks } from '../db/schema/index';
 import {
   CreateMaintenanceTaskRequest,
   UpdateMaintenanceTaskRequest,

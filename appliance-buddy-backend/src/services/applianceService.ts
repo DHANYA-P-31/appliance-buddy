@@ -1,6 +1,6 @@
 import { eq, ilike, desc, or } from 'drizzle-orm';
 import { db } from '../config/database';
-import { appliances, supportContacts, maintenanceTasks, linkedDocuments } from '../db/schema';
+import { appliances, supportContacts, maintenanceTasks, linkedDocuments } from '../db/schema/index';
 import { 
   CreateApplianceRequest, 
   UpdateApplianceRequest,
