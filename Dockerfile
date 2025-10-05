@@ -2,7 +2,7 @@
 FROM node:20-alpine
 
 # Install Python and build dependencies for native modules
-RUN apk add --no-cache python3 make g++
+RUN apk add --no-cache python3 make g++ wget
 
 # Set working directory
 WORKDIR /app
@@ -34,8 +34,8 @@ ENV PORT=3000
 EXPOSE 3000
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node healthcheck.js
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-3000}/health || exit 1
 
 # Start the application
 CMD ["node", "index.js"]

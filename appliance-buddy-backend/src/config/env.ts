@@ -4,7 +4,7 @@ dotenv.config();
 
 export const env = {
   NODE_ENV: process.env.NODE_ENV || 'development',
-  PORT: parseInt(process.env.PORT || '3001'),
+  PORT: parseInt(process.env.PORT || '3000'), // Railway provides PORT, default to 3000
   
   // Railway Environment Detection
   RAILWAY_ENVIRONMENT: process.env.RAILWAY_ENVIRONMENT || '',

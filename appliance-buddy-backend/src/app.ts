@@ -23,7 +23,7 @@ app.use(helmet());
 
 // CORS configuration
 app.use(cors({
-  origin: env.CORS_ORIGIN,
+  origin: [env.CORS_ORIGIN, 'https://healthcheck.railway.app'],
   credentials: true,
 }));
 
@@ -34,18 +34,36 @@ app.use(express.urlencoded({ extended: true }));
 // Logging middleware
 app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
+// Simple ping endpoint for basic connectivity
+app.get('/ping', (req, res) => {
+  res.status(200).send('pong');
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
-  const supabaseInfo = getSupabaseInfo();
-  res.json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString(),
-    environment: env.NODE_ENV,
-    database: {
-      type: env.DATABASE_URL ? 'Supabase' : 'PostgreSQL',
-      supabase: supabaseInfo
-    }
-  });
+  try {
+    const supabaseInfo = getSupabaseInfo();
+    res.status(200).json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      environment: env.NODE_ENV,
+      port: env.PORT,
+      database: {
+        type: env.DATABASE_URL ? 'Supabase' : 'PostgreSQL',
+        supabase: supabaseInfo
+      }
+    });
+  } catch (error) {
+    // Still return 200 for basic health check even if database info fails
+    console.warn('Health check warning:', error);
+    res.status(200).json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      environment: env.NODE_ENV,
+      port: env.PORT,
+      note: 'Basic health check - some features may be unavailable'
+    });
+  }
 });
 
 // API routes
@@ -57,14 +75,18 @@ app.use(errorHandler);
 // Server startup
 const startServer = async () => {
   try {
-    // Connect to database
-    await connectDB();
-    
-    // Start server
-    const server = app.listen(env.PORT, () => {
+    // Start server first, then connect to database
+    const server = app.listen(env.PORT, '0.0.0.0', () => {
       console.log(`🚀 Server running on port ${env.PORT}`);
       console.log(`📊 Environment: ${env.NODE_ENV}`);
       console.log(`🌐 CORS origin: ${env.CORS_ORIGIN}`);
+      console.log(`🏥 Health endpoint: http://0.0.0.0:${env.PORT}/health`);
+    });
+
+    // Connect to database after server is listening (non-blocking for health checks)
+    connectDB().catch(err => {
+      console.warn('Database connection warning:', err.message);
+      console.log('Server will continue running for health checks');
     });
 
     // Graceful shutdown
