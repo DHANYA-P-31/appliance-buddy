@@ -1,4 +1,4 @@
- {
+{
   "name": "appliance-buddy-backend",
   "version": "1.0.0",
   "description": "Express.js backend API for Appliance Buddy home appliance management system",
@@ -20,7 +20,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "health": "node healthcheck.js"
   },
-  "keywords": ["express", "api", "appliance", "management", "railway"],
+  "keywords": [
+    "express",
+    "api",
+    "appliance",
+    "management",
+    "railway"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -49,6 +55,7 @@
     "drizzle-kit": "^0.31.4",
     "eslint": "^9.35.0",
     "nodemon": "^3.1.10",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   }

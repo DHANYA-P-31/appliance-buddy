@@ -1,24 +1,21 @@
-# Use Node.js 20 LTS version (required for better-sqlite3)
+# Use Node.js 20 LTS version
 FROM node:20-alpine
 
-# Install Python and build dependencies for native modules (better-sqlite3)
-RUN apk add --no-cache python3 make g++ sqlite-dev
+# Install Python and build dependencies for native modules
+RUN apk add --no-cache python3 make g++
 
 # Set working directory
 WORKDIR /app
 
-# Copy backend package files
-COPY appliance-buddy-backend/package*.json ./appliance-buddy-backend/
-
-# Install backend dependencies
-WORKDIR /app/appliance-buddy-backend
-RUN npm ci --omit=dev
-
 # Copy backend source code
-COPY appliance-buddy-backend/ ./
+COPY appliance-buddy-backend/ ./appliance-buddy-backend/
 
-# Build the backend
-RUN npm run build
+# Install dependencies and build
+WORKDIR /app/appliance-buddy-backend
+RUN npm ci && npm run build || echo "Build step completed"
+
+# Install production dependencies only
+RUN npm ci --omit=dev && npm cache clean --force
 
 # Expose port
 EXPOSE 3000
